@@ -10,6 +10,7 @@ const Avatar = () => {
       width={30}
       alt="Avatar"
       src="/images/placeholder.jpg"
+      priority
     />
   );
 };
