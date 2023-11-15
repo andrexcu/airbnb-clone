@@ -32,11 +32,6 @@ const RegisterModal = () => {
     },
   });
 
-  const handleFormChange = () => {
-    registerModal.onClose();
-    loginModal.onOpen();
-  };
-
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
@@ -52,6 +47,11 @@ const RegisterModal = () => {
         setIsLoading(false);
       });
   };
+
+  const toggle = useCallback(() => {
+    registerModal.onClose();
+    loginModal.onOpen();
+  }, [loginModal, registerModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -111,7 +111,7 @@ const RegisterModal = () => {
         <div className="flex flex-row items-center justify-center gap-2">
           <div>Already have an account?</div>
           <div
-            onClick={handleFormChange}
+            onClick={toggle}
             className="
               text-neutral-800
               cursor-pointer
