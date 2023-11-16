@@ -14,14 +14,15 @@ import CategoryInput from "../inputs/CategoryInput";
 import { categories } from "../navbar/Categories";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
+import CountrySelect from "../inputs/CountrySelect";
 
 enum STEPS {
-  CATEGORY = 0,
-  LOCATION = 1,
-  INFO = 2,
-  IMAGES = 3,
-  DESCRIPTION = 4,
-  PRICE = 5,
+  CATEGORY,
+  LOCATION,
+  INFO,
+  IMAGES,
+  DESCRIPTION,
+  PRICE,
 }
 
 const RentModal = () => {
@@ -53,9 +54,17 @@ const RentModal = () => {
   });
 
   const category = watch("category");
+  const location = watch("location");
+
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("../Map"), {
+        ssr: false,
+      }),
+    [location]
+  );
 
   const setCustomValue = (id: string, value: any) => {
-    console.log(value);
     setValue(id, value, {
       shouldDirty: true,
       shouldTouch: true,
@@ -106,7 +115,9 @@ const RentModal = () => {
         {categories.map((item) => (
           <div key={item.label} className="col-span-1">
             <CategoryInput
-              onClick={(category) => setCustomValue("category", category)}
+              onClick={(category: string) =>
+                setCustomValue("category", category)
+              }
               selected={category === item.label}
               label={item.label}
               icon={item.icon}
@@ -117,13 +128,29 @@ const RentModal = () => {
     </div>
   );
 
+  if (step === STEPS.LOCATION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Where is your place located?"
+          subtitle="Help guests find you!"
+        />
+        <CountrySelect
+          value={location}
+          onChange={(value) => setCustomValue("location", value)}
+        />
+        <Map center={location?.latlng} />
+      </div>
+    );
+  }
+
   return (
     <Modal
       disabled={isLoading}
       isOpen={rentModal.isOpen}
       title="Airbnb your home!"
       actionLabel={actionLabel}
-      onSubmit={rentModal.onClose}
+      onSubmit={onNext}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
       onClose={rentModal.onClose}
