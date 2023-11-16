@@ -1,6 +1,8 @@
 "use client";
 
-import { FieldValues, useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -10,19 +12,19 @@ import useRentModal from "@/app/hooks/useRentModal";
 import Modal from "./Modal";
 
 import CategoryInput from "../inputs/CategoryInput";
-
+import CountrySelect from "../inputs/CountrySelect";
 import { categories } from "../navbar/Categories";
+
 import Input from "../inputs/Input";
 import Heading from "../Heading";
-import CountrySelect from "../inputs/CountrySelect";
 
 enum STEPS {
-  CATEGORY,
-  LOCATION,
-  INFO,
-  IMAGES,
-  DESCRIPTION,
-  PRICE,
+  CATEGORY = 0,
+  LOCATION = 1,
+  INFO = 2,
+  IMAGES = 3,
+  DESCRIPTION = 4,
+  PRICE = 5,
 }
 
 const RentModal = () => {
@@ -42,7 +44,7 @@ const RentModal = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       category: "",
-      location: null,
+      location: 1,
       guestCount: 1,
       roomCount: 1,
       bathroomCount: 1,
@@ -80,6 +82,30 @@ const RentModal = () => {
     setStep((value) => value + 1);
   };
 
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    if (step !== STEPS.PRICE) {
+      return onNext();
+    }
+
+    setIsLoading(true);
+
+    axios
+      .post("/api/listings", data)
+      .then(() => {
+        toast.success("Listing created!");
+        router.refresh();
+        reset();
+        setStep(STEPS.CATEGORY);
+        rentModal.onClose();
+      })
+      .catch(() => {
+        toast.error("Something went wrong.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   const actionLabel = useMemo(() => {
     if (step === STEPS.PRICE) {
       return "Create";
@@ -115,9 +141,7 @@ const RentModal = () => {
         {categories.map((item) => (
           <div key={item.label} className="col-span-1">
             <CategoryInput
-              onClick={(category: string) =>
-                setCustomValue("category", category)
-              }
+              onClick={(category) => setCustomValue("category", category)}
               selected={category === item.label}
               label={item.label}
               icon={item.icon}
@@ -139,7 +163,7 @@ const RentModal = () => {
           value={location}
           onChange={(value) => setCustomValue("location", value)}
         />
-        <Map center={location?.latlng} />
+        <Map center={location.lating} />
       </div>
     );
   }
@@ -150,7 +174,7 @@ const RentModal = () => {
       isOpen={rentModal.isOpen}
       title="Airbnb your home!"
       actionLabel={actionLabel}
-      onSubmit={onNext}
+      onSubmit={handleSubmit(onSubmit)}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
       onClose={rentModal.onClose}

@@ -20,7 +20,7 @@ interface MapProps {
   center?: number[];
 }
 
-const Map: React.FC<MapProps> = ({ center }) => {
+const Map = ({ center }: MapProps) => {
   return (
     <MapContainer
       center={(center as L.LatLngExpression) || [51, -0.09]}
