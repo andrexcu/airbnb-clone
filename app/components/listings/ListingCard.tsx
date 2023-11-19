@@ -10,13 +10,13 @@ import HeartButton from "../HeartButton";
 import Button from "../Button";
 
 interface ListingCardProps {
-  data: any;
+  data: Listing;
   reservation?: Reservation;
   onAction?: (id: string) => void;
   disabled?: boolean;
   actionLabel?: string;
   actionId?: string;
-  currentUser?: any;
+  currentUser?: User | null;
 }
 
 const ListingCard = ({
@@ -86,7 +86,10 @@ const ListingCard = ({
                 group-hover:scale-110
                 transition
               "
+            sizes="(max-width: 640px) 100vw, 50vw"
             priority
+            placeholder="blur"
+            blurDataURL={data.imageSrc}
           />
           <div className="abslolute top-3 right-3">
             <HeartButton listingId={data.id} currentUser={currentUser} />

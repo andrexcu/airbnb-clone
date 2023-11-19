@@ -3,10 +3,11 @@ import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import useLoginModal from "./useLoginModal";
+import { User } from "@prisma/client";
 
 interface IUseFavorite {
   listingId: string;
-  currentUser?: any;
+  currentUser?: User | null;
 }
 
 const useFavorite = ({ listingId, currentUser }: IUseFavorite) => {
@@ -40,7 +41,7 @@ const useFavorite = ({ listingId, currentUser }: IUseFavorite) => {
         toast.error("Something went wrong.");
       }
     },
-    [currentUser, hasFavorited, listingId, loginModal]
+    [currentUser, hasFavorited, listingId, loginModal, router]
   );
 
   return {

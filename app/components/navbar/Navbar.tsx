@@ -14,7 +14,6 @@ interface NavbarProps {
 }
 
 const Navbar = ({ currentUser }: NavbarProps) => {
-  console.log(currentUser);
   return (
     <div className="fixed w-full bg-white z-10 shadow-sm">
       <div
