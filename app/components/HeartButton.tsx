@@ -32,14 +32,24 @@ const HeartButton: React.FC<HeartButtonProps> = ({
         size={28}
         className="
           fill-white
-          absolute
-          -top-[2px]
-          -right-[2px]
+          absolute 
+          top-[10%] 
+          right-[10%] 
+          transform 
+          translate-x-[50%] 
+          translate-y-[50%]
         "
       />
       <AiFillHeart
-        size={24}
-        className={hasFavorited ? "fill-rose-500" : "fill-neutral-500/70"}
+        size={28}
+        className={`          
+        absolute 
+        top-[50%] 
+        right-[10%] 
+        transform 
+        translate-x-[50%] 
+        translate-y-[50%]
+        ${hasFavorited ? "fill-rose-500" : "fill-neutral-500/70"}`}
       />
     </div>
   );
