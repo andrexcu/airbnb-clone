@@ -2,9 +2,10 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import getListingById from "@/app/actions/getListingById";
 import EmptyState from "@/app/components/EmptyState";
 import ListingClient from "./ListingClient";
+import getListings from "@/app/actions/getListings";
 
 interface IParams {
-  listingId?: string;
+  id?: string;
 }
 
 const page = async ({ params }: { params: IParams }) => {

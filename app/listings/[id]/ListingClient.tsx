@@ -14,16 +14,11 @@ import ListingHead from "@/app/components/listings/ListingHead";
 import { Listing, Reservation, User } from "@prisma/client";
 
 interface ListingClientProps {
-  reservations?: Reservation;
   listing: Listing;
   currentUser?: User | null;
 }
 
-const ListingClient: React.FC<ListingClientProps> = ({
-  listing,
-  reservations = [],
-  currentUser,
-}) => {
+const ListingClient = ({ listing, currentUser }: ListingClientProps) => {
   const loginModal = useLoginModal();
   const router = useRouter();
 
