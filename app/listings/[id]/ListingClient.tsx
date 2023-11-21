@@ -23,7 +23,7 @@ const initialDateRange = {
 };
 
 interface ListingClientProps {
-  reservations?: Reservation[];
+  reservations?: (Reservation & { listing: Listing })[];
   listing: Listing & {
     user: User;
   };
@@ -72,7 +72,7 @@ const ListingClient = ({
       .then(() => {
         toast.success("Listing reserved!");
         setDateRange(initialDateRange);
-        //redirect to /trips
+        router.push("/trips");
         router.refresh();
       })
       .catch(() => {
