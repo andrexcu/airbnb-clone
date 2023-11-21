@@ -105,7 +105,7 @@ const ListingClient = ({
   return (
     <Container>
       <div
-        className="
+        className="`
           max-w-screen-lg 
           mx-auto
         "
