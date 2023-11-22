@@ -34,8 +34,8 @@ const HeartButton = ({ listingId, currentUser }: HeartButtonProps) => {
         className="
           fill-white
           absolute 
-          top-[10%] 
-          right-[10%] 
+          top-[50%] 
+          right-[50%] 
           transform 
           translate-x-[50%] 
           translate-y-[50%]
@@ -45,8 +45,8 @@ const HeartButton = ({ listingId, currentUser }: HeartButtonProps) => {
         size={28}
         className={`          
         absolute 
-        top-[50%] 
-        right-[10%] 
+        top-[0%] 
+        right-[0%] 
         transform 
         translate-x-[50%] 
         translate-y-[50%]
