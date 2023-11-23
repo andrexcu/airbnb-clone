@@ -36,6 +36,7 @@ const ListingInfo = ({
   category,
   locationValue,
 }: ListingInfoProps) => {
+  // console.log(roomCount);
   const { getByValue } = useCountries();
 
   const coordinates = getByValue(locationValue)?.lating;

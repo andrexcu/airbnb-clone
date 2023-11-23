@@ -39,18 +39,17 @@ const ListingClient = ({
   const router = useRouter();
 
   const disabledDates = useMemo(() => {
-    let dates: Date[] = [];
-
-    reservations.forEach((reservation) => {
+    // let dates: Date[] = [];
+    return reservations.flatMap((reservation) => {
       const range = eachDayOfInterval({
         start: new Date(reservation.startDate),
         end: new Date(reservation.endDate),
       });
-
-      dates = [...dates, ...range];
+      // dates = [...dates, ...range];
+      return range;
     });
 
-    return dates;
+    // return dates;
   }, [reservations]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -131,6 +130,7 @@ const ListingClient = ({
               user={listing.user}
               category={category}
               description={listing.description}
+              guestCount={listing.guestCount}
               roomCount={listing.roomCount}
               bathroomCount={listing.bathroomCount}
               locationValue={listing.locationValue}
