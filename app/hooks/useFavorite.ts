@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import useLoginModal from "./useLoginModal";
 import { User } from "@prisma/client";
@@ -20,36 +20,67 @@ const useFavorite = ({ listingId, currentUser }: IUseFavorite) => {
     return list.includes(listingId);
   }, [currentUser, listingId]);
 
+  const [optimisticHasFavorited, setOptimisticHasFavorited] =
+    useState(hasFavorited);
+  const [isLoading, setIsLoading] = useState(false);
+
   const toggleFavorite = useCallback(
     async (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
 
       if (!currentUser) return loginModal.onOpen();
 
-      try {
-        let request;
-        if (hasFavorited) {
-          // console.log(listingId, currentUser);
-          request = () => axios.delete(`/api/favorites/${listingId}`);
-        } else {
-          request = () => axios.post(`/api/favorites/${listingId}`);
-        }
+      let request;
 
+      try {
+        setIsLoading(true);
+        if (optimisticHasFavorited) {
+          setOptimisticHasFavorited(false);
+          // ${listingId}
+          request = () =>
+            axios
+              .delete(`/api/favorites/${listingId}`)
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((error) => {
+                setOptimisticHasFavorited(true);
+              });
+        } else {
+          setOptimisticHasFavorited(true);
+          request = () =>
+            axios
+              .post(`/api/favorites/${listingId}`)
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((error) => {
+                setOptimisticHasFavorited(false);
+              });
+        }
         await request();
         router.refresh();
         toast.success("Success");
       } catch (error) {
-        console.log(listingId, currentUser);
-        // console.log(error);
-        toast.error("Something went wrong.");
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
       }
     },
-    [currentUser, hasFavorited, listingId, loginModal, router]
+    [
+      currentUser,
+      optimisticHasFavorited,
+      listingId,
+      loginModal,
+      router,
+      isLoading,
+    ]
   );
 
   return {
-    hasFavorited,
+    optimisticHasFavorited,
     toggleFavorite,
+    isLoading,
   };
 };
 

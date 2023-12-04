@@ -1,5 +1,5 @@
 "use client";
-
+import { useOptimistic, useState, useRef } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { User } from "@prisma/client";
 import useFavorite from "@/app/hooks/useFavorite";
@@ -10,15 +10,12 @@ interface HeartButtonProps {
 }
 
 const HeartButton = ({ listingId, currentUser }: HeartButtonProps) => {
-  const { hasFavorited, toggleFavorite } = useFavorite({
+  const { optimisticHasFavorited, toggleFavorite, isLoading } = useFavorite({
     listingId,
     currentUser,
   });
 
-  const debugHeart = () => {
-    console.log(listingId, currentUser);
-  };
-
+  console.log(optimisticHasFavorited);
   return (
     <div
       onClick={toggleFavorite}
@@ -50,7 +47,8 @@ const HeartButton = ({ listingId, currentUser }: HeartButtonProps) => {
         transform 
         translate-x-[50%] 
         translate-y-[50%]
-        ${hasFavorited ? "fill-rose-500" : "fill-neutral-500/70"}`}
+        ${isLoading ? "opacity-50" : ""}
+        ${optimisticHasFavorited ? "fill-rose-500" : "fill-white"}`}
       />
     </div>
   );
